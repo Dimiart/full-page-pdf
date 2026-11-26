@@ -13,6 +13,18 @@ const MARGINS = { none: 0, small: 0.25, normal: 0.4, wide: 0.8 };
 const MAX_PAGE_IN = 200;
 
 const busyTabs = new Set();
+// File names we want for our own downloads. Chrome sometimes ignores the
+// `filename` option for data: URLs (e.g. when another extension manages
+// downloads) and falls back to "download", so we also set it here.
+const pendingNames = [];
+
+chrome.downloads.onDeterminingFilename.addListener((item, suggest) => {
+  if (item.byExtensionId === chrome.runtime.id && pendingNames.length) {
+    suggest({ filename: pendingNames.shift(), conflictAction: 'uniquify' });
+  } else {
+    suggest();
+  }
+});
 
 // ---------- Entry points ----------
 
@@ -94,12 +106,12 @@ async function savePdf(tab) {
     }
     await evaluate(target, 'window.__pdfRestore && window.__pdfRestore()').catch(() => {});
 
-    const download = (filename) => chrome.downloads.download({
+    const download = (filename) => (pendingNames.push(filename), chrome.downloads.download({
       url: 'data:application/pdf;base64,' + data,
       filename,
       saveAs: s.saveAs,
       conflictAction: 'uniquify'
-    });
+    }).catch((e) => { pendingNames.pop(); throw e; }));
     try {
       await download(makeFileName(tab.title, url));
     } catch (e) {
