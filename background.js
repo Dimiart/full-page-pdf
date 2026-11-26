@@ -112,15 +112,18 @@ async function savePdf(tab) {
       saveAs: s.saveAs,
       conflictAction: 'uniquify'
     }).catch((e) => { pendingNames.pop(); throw e; }));
+    let filename = makeFileName(tab.title, url);
     try {
-      await download(makeFileName(tab.title, url));
+      await download(filename);
     } catch (e) {
       // Fallback when the OS rejects the file name (rare encoding issues).
       if (!/filename/i.test(String(e?.message))) throw e;
-      await download('page-' + new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-') + '.pdf');
+      filename = 'page-' + new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-') + '.pdf';
+      await download(filename);
     }
 
     await badge(tab.id, '✓', '#2e7d32', 2500);
+    if (s.notifyOnSave && !s.saveAs) notify('PDF saved', filename, 4000);
   } catch (err) {
     console.error(err);
     await fail(tab.id, humanError(err));
@@ -295,7 +298,8 @@ function humanError(err) {
   if (/Cannot access|Cannot attach|chrome-extension/i.test(msg)) {
     return 'Chrome does not allow access to this page.';
   }
-  return 'Could not create the PDF: ' + msg;
+  return 'Could not create the PDF: ' + msg +
+    '. Tip: you can still use Ctrl+P (⌘P) → Save as PDF → More settings → Background graphics.';
 }
 
 function makeFileName(title, url) {
@@ -321,12 +325,13 @@ async function badge(tabId, text, color, clearAfterMs) {
   } catch { /* the tab may have been closed */ }
 }
 
+function notify(title, message, clearAfterMs) {
+  chrome.notifications.create({ type: 'basic', iconUrl: 'icons/128.png', title, message }, (id) => {
+    if (clearAfterMs && id) setTimeout(() => chrome.notifications.clear(id), clearAfterMs);
+  });
+}
+
 async function fail(tabId, message) {
   await badge(tabId, '!', '#c62828', 4000);
-  chrome.notifications.create({
-    type: 'basic',
-    iconUrl: 'icons/128.png',
-    title: 'Could not save PDF',
-    message
-  });
+  notify('Could not save PDF', message);
 }

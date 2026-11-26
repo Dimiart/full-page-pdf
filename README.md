@@ -54,7 +54,7 @@ It also works in other Chromium browsers, such as Edge, Brave, Opera and Vivaldi
 | Right-click the page → **Save page as PDF** | Same as above |
 | Right-click the icon → **Options** | Opens settings |
 
-The badge on the icon shows the status: `…` while saving, `✓` when done, and `!` on error (details appear in a notification).
+The badge on the icon shows the status: `…` while saving, `✓` when done, and `!` on error. A notification shows the file name when saving succeeds, or the reason (with a Ctrl+P fallback tip) when it fails.
 
 ## Options
 
@@ -65,6 +65,7 @@ The badge on the icon shows the status: `…` while saving, `✓` when done, and
 | Print backgrounds | ✅ | Include background colors and images |
 | Load lazy images | ✅ | Scroll through the page before saving |
 | Ask where to save | ⬜ | Show the *Save as* dialog each time |
+| Notify when saved | ✅ | Show a notification with the file name |
 | Paper size | A4 | A4, A3, A5, Letter or Legal (paged mode) |
 | Margins | Normal | None, Narrow, Normal or Wide (paged mode) |
 | Landscape | ⬜ | Paged mode only |

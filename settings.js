@@ -9,7 +9,8 @@ export const DEFAULTS = {
   fitWidth: true,       // paged mode: keep desktop layout by fitting window width
   scrollFirst: true,    // scroll first so lazy images load
   headerFooter: false,  // header/footer: date, title, URL, page numbers
-  saveAs: false         // ask where to save every time
+  saveAs: false,        // ask where to save every time
+  notifyOnSave: true    // show a notification with the file name when done
 };
 
 export async function getSettings() {
