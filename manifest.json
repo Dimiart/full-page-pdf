@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Full Page PDF – Save Web Page as PDF",
+  "version": "1.0.0",
+  "description": "Save any web page as a PDF in one click: one long page exactly as on screen, or paged A4/Letter. No account, no uploads.",
+  "action": {
+    "default_title": "Save page as PDF",
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "permissions": [
+    "activeTab",
+    "debugger",
+    "downloads",
+    "scripting",
+    "storage",
+    "contextMenus",
+    "notifications"
+  ],
+  "short_name": "Full Page PDF"
+}

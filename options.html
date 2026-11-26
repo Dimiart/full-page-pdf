@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Full Page PDF – Options</title>
+  <style>
+    :root {
+      --bg: #f6f8f6; --card: #fff; --text: #1b2a1e; --muted: #5d6b60;
+      --accent: #2e7d32; --border: #dfe6e0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #121613; --card: #1c221d; --text: #e6efe7; --muted: #9fb0a2; --accent: #66bb6a; --border: #2c352e; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, sans-serif; }
+    main { max-width: 560px; margin: 40px auto; padding: 0 16px; }
+    header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    header img { width: 48px; height: 48px; }
+    h1 { font-size: 22px; margin: 0; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px 20px; margin-bottom: 16px; }
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .row:last-child { border-bottom: 0; }
+    .row small { display: block; color: var(--muted); font-size: 13px; }
+    select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); }
+    input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--accent); flex-shrink: 0; }
+    .hint { color: var(--muted); font-size: 13px; }
+    #saved { color: var(--accent); font-weight: 600; opacity: 0; transition: opacity .3s; }
+    #saved.show { opacity: 1; }
+    h2.sub { font-size: 14px; font-weight: 600; color: var(--muted); margin: 24px 4px 8px; }
+    .dim { opacity: .5; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="icons/128.png" alt="">
+    <div>
+      <h1>Full Page PDF</h1>
+      <div class="hint">Click the toolbar icon to save the current page as a PDF.</div>
+    </div>
+  </header>
+
+  <div class="card">
+    <label class="row"><span>One long page<small>The whole page on a single sheet with no breaks. Turn off to split it into pages</small></span><input type="checkbox" id="singlePage"></label>
+    <label class="row"><span>Look as on screen<small>Instead of the site's simplified print version</small></span><input type="checkbox" id="screenMedia"></label>
+    <label class="row"><span>Print backgrounds<small>Background colors and images</small></span><input type="checkbox" id="background"></label>
+    <label class="row"><span>Load lazy images<small>Scroll to the bottom before saving</small></span><input type="checkbox" id="scrollFirst"></label>
+    <label class="row"><span>Ask where to save<small>Otherwise the file goes straight to Downloads</small></span><input type="checkbox" id="saveAs"></label>
+  </div>
+
+  <h2 class="sub">When splitting into pages</h2>
+  <div class="card" id="pagedCard">
+    <label class="row"><span>Paper size</span>
+      <select id="paper">
+        <option value="A4">A4</option>
+        <option value="A3">A3</option>
+        <option value="A5">A5</option>
+        <option value="Letter">Letter</option>
+        <option value="Legal">Legal</option>
+      </select>
+    </label>
+    <label class="row"><span>Margins</span>
+      <select id="margins">
+        <option value="none">None</option>
+        <option value="small">Narrow</option>
+        <option value="normal">Normal</option>
+        <option value="wide">Wide</option>
+      </select>
+    </label>
+    <label class="row"><span>Landscape</span><input type="checkbox" id="landscape"></label>
+    <label class="row"><span>Keep desktop layout<small>Shrink the page to the sheet width so the site doesn't switch to its mobile layout</small></span><input type="checkbox" id="fitWidth"></label>
+    <label class="row"><span>Header and footer<small>Date, title, URL and page numbers</small></span><input type="checkbox" id="headerFooter"></label>
+  </div>
+
+  <p class="hint">Changes are saved automatically. <span id="saved">Saved ✓</span></p>
+</main>
+<script type="module" src="options.js"></script>
+</body>
+</html>
