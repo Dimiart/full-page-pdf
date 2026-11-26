@@ -37,7 +37,7 @@ The extension isn't on the Chrome Web Store yet. To install it from source:
 
 1. Download this repository (**Code → Download ZIP**) and unzip it into a permanent folder, or clone it:
    ```bash
-   git clone https://github.com/Dimiart/pdf-add-on.git
+   git clone https://github.com/Dimiart/full-page-pdf.git
    ```
 2. Open `chrome://extensions`.
 3. Turn on **Developer mode** (top-right toggle).
