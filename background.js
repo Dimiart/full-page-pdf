@@ -83,6 +83,10 @@ async function savePdf(tab) {
     // full height of the PDF page.
     await freezeViewportHeights(target).catch((e) => console.warn('freeze', e));
 
+    // Make sure images and web fonts have finished loading, so the PDF has
+    // no empty image boxes or fallback fonts.
+    await waitForAssets(target).catch((e) => console.warn('assets', e));
+
     const params = await buildParams(target, s);
     let { data } = await cdp(target, 'Page.printToPDF', params);
 
@@ -271,6 +275,24 @@ function countPdfPages(base64) {
   const bin = atob(base64);
   const m = bin.match(/\/Type\s*\/Page(?![a-zA-Z])/g);
   return m ? m.length : 1;
+}
+
+// Wait (up to 8 s) for pending <img> elements and web fonts to load.
+function waitForAssets(target, timeoutMs = 8000) {
+  return evaluate(target, `(async () => {
+    const pending = [...document.images]
+      .filter((img) => !img.complete && img.getAttribute('src') !== '')
+      .map((img) => new Promise((r) => {
+        img.addEventListener('load', r, { once: true });
+        img.addEventListener('error', r, { once: true });
+      }));
+    if (document.fonts) pending.push(document.fonts.ready);
+    await Promise.race([
+      Promise.all(pending),
+      new Promise((r) => setTimeout(r, ${timeoutMs}))
+    ]);
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  })()`);
 }
 
 function cdp(target, method, params = {}) {
